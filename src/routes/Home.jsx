@@ -2,26 +2,26 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
-    // store result from api
     const [bugs, setBugs] = useState([]);
     const [error, setError] = useState('');
-
     const apiUrl = import.meta.env.VITE_API_HOST;
 
     useEffect(() => {
-        // fetch data from api
         async function fetchData() {
             const url = `${apiUrl}/api/bugs/all`;
             const response = await fetch(url);
-            if(response.ok){ 
-              const data = await response.json();
-              if (!ignore) {
-                setBugs(data);
-                setError(''); 
-              }
+            
+            if (response.ok) { 
+                const data = await response.json();
+                console.log("Fetched data:", data);  // Check what data is being fetched
+                
+                if (!ignore) {
+                    setBugs(data);
+                    setError(''); 
+                }
             } else {
-              setBugs([]);
-              setError('Failed to load bugs. Please try again.');
+                setBugs([]);
+                setError('Failed to load bugs. Please try again.');
             } 
         }
         let ignore = false;
@@ -37,7 +37,7 @@ export default function Home() {
             <p>
                 <Link to="/create" className="btn btn-outline-secondary">Add a Bug</Link>
             </p>
-            {error && <p className="text-danger">{error}</p>} {/* Display error message */}
+            {error && <p className="text-danger">{error}</p>}
             {
                 bugs.length > 0 ?         
                 bugs.map((bug, index) => (
@@ -45,7 +45,7 @@ export default function Home() {
                         <div className="card-body">
                             <div className="d-flex align-items-center position-relative">
                                 <img 
-                                    src={`${apiUrl}/images/${bug.image}`} // Adjusted image URL here
+                                    src={`${apiUrl}/images/${bug.image}`}  // Double-check here: use `bug.filename` if needed
                                     className="thumbnail" 
                                     alt={bug.name} 
                                 />
