@@ -25,7 +25,7 @@ export default function Update() {
             if (response.ok) {
                 const data = await response.json();
                 setBug(data);
-                // PREPOPULATE FORM FIELDS WITH EXISTING DATA
+                // prepopulate data fields with existing data
                 setFormData({
                     name: data.name,
                     description: data.description,
@@ -43,23 +43,23 @@ export default function Update() {
     // HANDLE FORM INPUT CHANGES
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        setFormData(prev => ({ // FIXED TYPO: SETFORMDATE TO SETFORMDATA
+        setFormData(prev => ({
             ...prev,
-            [name]: files ? files[0] : value // HANDLE FILE INPUT SEPARATELY
+            [name]: files ? files[0] : value // handle file input separately
         }));
     };
 
     // HANDLE FORM SUBMISSION
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // VALIDATE REQUIRED FIELDS
+        // validate required fields
         if (!formData.name || !formData.description || !formData.dateFound || !formData.species) {
             setError('Please fill in all required fields.');
             return;
         }
 
         // PREPARE THE FORM DATA FOR SUBMISSION
-        const updateBug = new FormData(); // FIXED TYPO: UPDATEDBUG TO UPDATEBUG
+        const updateBug = new FormData();
         updateBug.append('name', formData.name);
         updateBug.append('description', formData.description);
         updateBug.append('dateFound', formData.dateFound);
@@ -75,30 +75,34 @@ export default function Update() {
         });
 
         if (response.ok) {
-            navigate('/'); // BACK TO HOMEPAGE
+            navigate('/'); // back to homepage
         } else {
             setError('Failed to update bug. Please try again.');
         }
     };
 
-    if (!bug) {
-        return <p>Loading...</p>; // SHOW LOADING STATE WHILE FETCHING DATA
-    }
+    // HANDLE CANCEL BUTTON CLICK
+    const handleCancel = () => {
+        navigate('/'); // back to homepage 
+    };
 
     return (
-        <>
-            <h1>Update Bug</h1>
-            {error && <p className="text-danger">{error}</p>} {/* DISPLAY ERROR MESSAGE */}
+        <div className="container"> 
+            <h1 className="my-bugs-title">Update Bug</h1>
+            <div className="mb-3 text-center"> 
+                <img src={`${apiUrl}/images/${bug.image}`} className="centered-image" alt={bug.name} />
+            </div>
+            {error && <p className="text-danger">{error}</p>} 
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Name</label>
                     <input
                         type="text"
                         id="name"
-                        name="name" // ENSURE NAME ATTRIBUTE IS SET
+                        name="name" 
                         value={formData.name}
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control bg-light"
                         required
                     />
                 </div>
@@ -109,7 +113,7 @@ export default function Update() {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control bg-light"
                         required
                     ></textarea>
                 </div>
@@ -118,10 +122,10 @@ export default function Update() {
                     <input
                         type="date"
                         id="dateFound"
-                        name="dateFound" // ENSURE NAME ATTRIBUTE IS SET
+                        name="dateFound" 
                         value={formData.dateFound}
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control bg-light"
                         required
                     />
                 </div>
@@ -130,10 +134,10 @@ export default function Update() {
                     <input
                         type="text"
                         id="species"
-                        name="species" // ENSURE NAME ATTRIBUTE IS SET
+                        name="species" 
                         value={formData.species}
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control bg-light"
                         required
                     />
                 </div>
@@ -144,14 +148,14 @@ export default function Update() {
                         id="file"
                         name="file"
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control bg-light"
                     />
-                    {bug.filename && (
-                        <img src={`${apiUrl}/images/${bug.filename}`} alt={bug.name} className="thumbnail" />
-                    )}
                 </div>
-                <button type="submit" className="btn btn-primary">Update Bug</button>
+                <div className="d-flex justify-content-between"> 
+                    <button type="submit" className="btn btn-primary">Update Bug</button>
+                    <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                </div>
             </form>
-        </>
+        </div>
     );
 }

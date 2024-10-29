@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import '/src/index.css'; 
 
 export default function Delete() {
     const { id } = useParams();
@@ -7,19 +8,18 @@ export default function Delete() {
 
     // STATE TO HOLD EXISTING BUG DATA
     const [bug, setBug] = useState(null);
-    const [error, setError] = useState('');
-
+    const [confirmDelete, setConfirmDelete] = useState(false); // state to track delete confirmation
     const apiUrl = import.meta.env.VITE_API_HOST;
 
     // FETCH BUG DATA BY ID
     useEffect(() => {
         async function fetchBugData() {
-            const response = await fetch(`${apiUrl}/api/bugs/read/${id}`);
+            const response = await fetch(`${apiUrl}/api/bugs/${id}`);
             if (response.ok) {
-                const data = await response.json();
-                setBug(data);
+                const bugData = await response.json();
+                setBug(bugData); // set the bug data
             } else {
-                setError('Failed to load bug data.'); // USE ELSE BLOCK FOR BETTER ERROR HANDLING
+                setError('Failed to load bug data.'); // loading error
             }
         }
         fetchBugData();
@@ -32,31 +32,46 @@ export default function Delete() {
         });
 
         if (response.ok) {
-            navigate('/'); // BACK TO HOMEPAGE AFTER DELETION
+            navigate('/'); // back to homepage after deletion
         } else {
-            setError('Failed to delete bug. Please try again.'); // USE ELSE BLOCK FOR BETTER ERROR HANDLING
+            setError('Failed to delete bug. Please try again.'); // deletion error
         }
     };
 
-    // ADD LOADING STATE CHECK
-    if (error) {
-        return <p className="text-danger">{error}</p>;
-    }
-
-    if (!bug) { // CHECK IF BUG DATA IS LOADING
-        return <p>Loading...</p>; // DISPLAY LOADING MESSAGE IF DATA IS NOT YET LOADED
-    }
-
     return (
-        <>
+        <div className="delete-container">  
             <h1>Delete Bug</h1>
-            <p>Are you sure you want to delete this bug?</p>
-            <h2>{bug.name}</h2>
-            <img src={`${apiUrl}/images/${bug.filename}`} alt={bug.name} className="thumbnail" />
-            <div>
-                <button onClick={handleDelete} className="btn btn-danger">Delete</button>
-                <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button>
+
+            <div className="d-flex align-items-center position-relative bug-info">
+                <img 
+                    src={`${apiUrl}/images/${bug?.image}`} 
+                    alt={bug?.name} 
+                    className="thumbnail" 
+                />
+                <div className="bug-details ms-3"> 
+                    <h2>{bug?.name}</h2>
+                    <p>
+                        <span className="italic">{bug?.species}</span><br />
+                        Date found: {bug?.dateFound}<br />
+                        {bug?.description}
+                    </p>
+                </div>
             </div>
-        </>
+
+            <div className="mt-4"> 
+                {!confirmDelete ? (
+                    <>
+                        <button onClick={() => setConfirmDelete(true)} className="btn btn-danger">Delete</button>
+                        <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button>
+                    </>
+                ) : (
+                    <>
+                        <p>Are you sure you want to delete this bug?</p>
+                        <button onClick={handleDelete} className="btn btn-danger">Yes</button>
+                        <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button> 
+                    </>
+                )}
+            </div>
+        </div>
     );
 }

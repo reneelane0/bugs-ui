@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import '/src/index.css';
 
 export default function Home() {
     const [bugs, setBugs] = useState([]);
@@ -13,17 +14,16 @@ export default function Home() {
             
             if (response.ok) { 
                 const data = await response.json();
-                console.log("Fetched data:", data);  // Check what data is being fetched
+                console.log("Fetched data:", data);
                 
-                if (!ignore) {
-                    setBugs(data);
-                    setError(''); 
-                }
+                setBugs(data);
+                setError(''); 
             } else {
                 setBugs([]);
                 setError('Failed to load bugs. Please try again.');
             } 
         }
+        
         let ignore = false;
         fetchData();
         return () => {
@@ -32,28 +32,28 @@ export default function Home() {
     }, [apiUrl]);
 
     return (
-        <>
-            <h1>My Bugs</h1>
-            <p>
-                <Link to="/create" className="btn btn-outline-secondary">Add a Bug</Link>
-            </p>
-            {error && <p className="text-danger">{error}</p>}
-            {
-                bugs.length > 0 ?         
-                bugs.map((bug, index) => (
+        <div className="container">
+            <h1 className="my-bugs-title">My Bugs</h1>
+            <div className="text-center mb-3">
+                <Link to="/create" className="add-bug-button">Add a Bug</Link>
+            </div>
+            <div className="bug-list">
+                {error && <p className="text-danger">{error}</p>}
+                {bugs.length > 0 ? bugs.map((bug, index) => (
                     <div key={index} className="card mb-3">
                         <div className="card-body">
                             <div className="d-flex align-items-center position-relative">
                                 <img 
-                                    src={`${apiUrl}/images/${bug.image}`}  // Double-check here: use `bug.filename` if needed
+                                    src={`${apiUrl}/images/${bug.image}`} 
                                     className="thumbnail" 
                                     alt={bug.name} 
                                 />
                                 <div className="bug-info">
                                     <h5 className="card-title">{bug.name}</h5>
                                     <p className="card-text">
-                                        {bug.description}<br />
-                                        {bug.dateFound}
+                                        <span className="italic">{bug.species}</span><br />
+                                        Date found: {bug.dateFound}<br /> 
+                                        {bug.description}
                                     </p>
                                 </div>
                                 <div className="position-absolute top-0 end-0">
@@ -67,9 +67,8 @@ export default function Home() {
                             </div>
                         </div>            
                     </div>
-                )) :
-                <p>No bugs.</p>
-            }
-        </>
+                )) : <p>No bugs.</p>}
+            </div>
+        </div>
     );
 }
