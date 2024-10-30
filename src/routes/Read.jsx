@@ -23,6 +23,8 @@ export default function Read() {
             }
         }
 
+        fetchData();
+
     }, [id, apiUrl]); // added apiUrl to dependency array
 
     return (

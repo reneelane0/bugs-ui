@@ -24,7 +24,6 @@ export default function Create() {
         formData.append('image', image);
 
         async function postData() {
-            setLoading(true);
             setError('');
             const response = await fetch(apiUrl, {
                 method: 'POST',

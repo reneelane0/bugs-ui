@@ -1,1 +1,3 @@
 For using Navigate: https://stackoverflow.com/questions/31079081/how-to-programmatically-navigate-using-react-router
+Bootstrap classes: https://www.w3schools.com/bootstrap/bootstrap_ref_all_classes.asp
+React useEffect: https://react.dev/reference/react/useEffect

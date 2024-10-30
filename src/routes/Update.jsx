@@ -15,7 +15,6 @@ export default function Update() {
         file: null 
     });
     const [error, setError] = useState('');
-
     const apiUrl = import.meta.env.VITE_API_HOST;
 
     // FETCH BUG DATA BY ID
@@ -90,7 +89,11 @@ export default function Update() {
         <div className="container"> 
             <h1 className="my-bugs-title">Update Bug</h1>
             <div className="mb-3 text-center"> 
-                <img src={`${apiUrl}/images/${bug.image}`} className="centered-image" alt={bug.name} />
+                {bug ? (
+                    <img src={`${apiUrl}/images/${bug.image}`} className="centered-image" alt={bug.name} />
+                ) : (
+                    <p>Loading...</p> 
+                )}
             </div>
             {error && <p className="text-danger">{error}</p>} 
             <form onSubmit={handleSubmit}>
