@@ -59,19 +59,20 @@ export default function Delete() {
             </div>
 
             <div className="mt-4"> 
-                {!confirmDelete ? (
-                    <>
-                        <button onClick={() => setConfirmDelete(true)} className="btn btn-danger">Delete</button>
-                        <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button>
-                    </>
-                ) : (
-                    <>
-                        <p>Are you sure you want to delete this bug?</p>
-                        <button onClick={handleDelete} className="btn btn-danger">Yes</button>
-                        <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button> 
-                    </>
-                )}
-            </div>
+    {confirmDelete ? (
+        <>
+            <p>Are you sure you want to delete this bug?</p>
+            <button onClick={handleDelete} className="btn btn-danger">Yes</button>
+            <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button> 
+        </>
+    ) : (
+        <>
+            <button onClick={() => setConfirmDelete(true)} className="btn btn-danger">Delete</button>
+            <button onClick={() => navigate('/')} className="btn btn-secondary">Cancel</button>
+        </>
+    )}
+</div>
+
         </div>
     );
 }
